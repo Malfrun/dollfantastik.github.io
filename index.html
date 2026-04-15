@@ -1,44 +1,179 @@
 <!doctype html>
 <html lang="en">
-  <script
-    type="module"
-    src="https://unpkg.com/metallicss@4.0.3/dist/metallicss.min.js"
-  ></script>
+
   <head>
     <meta charset="UTF-8" />
     <title>DollFantastique</title>
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/audioplayer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    	<!-- jQuery -->
+	<script src="jquery/jquery-4.0.0.min.js"></script>
+	<link rel="stylesheet" href="jquery/jquery-ui.css" />
+	<script src="jquery/jquery-ui.min.js"></script>
+  
   </head>
   <header>
     <div class="heading-grid-container">
-      <div class><img src="img/header-text.png" alt="DollFantastique" /></div>
-      
+      <div class><img src="CSS/img/header-text.png" alt="DollFantastique" /></div>
   </header>
   <body>
-    <div class="heading">
     <div class="body-grid-container">
-      <div class="body-item"></div>
-      <div class="navbar">
-        <div class="content-border"></div>
-          <div class="nav-element">
-          <input type="checkbox" id="Option1" name="Option1" autocomplete="off">
-          <label for="Option1">About</label>
-          </div>
-           <div class="nav-element">
-          <input type="checkbox" id="Option2" name="Option2" autocomplete="off">
-          <label for="Option2" >Blog</label>
-          </div>
-           <div class="nav-element">
-            <input type="checkbox" id="Option3" name="Option3" autocomplete="off">
-          <label for="Option3">Development</label>
-          </div>
-           <div class="nav-element">
-          <input type="checkbox" id="Option4" name="Option4" autocomplete="off">
-          <label for="Option4">Inspirations</label>
-          </div>
+      <div class="nav-img">
+        <div class="visualiser-container">
         </div>
+      </div>
+    <div class="navbar">
+      <a href="index.html" class="nav-element">
+      Home
+      </a>
+        <a href="About.html" class="nav-element">
+      About
+      </a>
+        <a href="index.html" class="nav-element">
+      Blog
+      </a>
+      
+    </div>
+      <div class="content-background">
+      <div class = "content-grid">
+        <div class="home-image"><img src="https://i.pinimg.com/736x/89/53/21/89532193d3737088442ac009df6ff1ba.jpg" alt="alternative text" /></div>
+        <div class="audio-player-container">
+          <div id="audio-player">
+         <audio id="ap-current">
+    <!-- Initial Song -->
+        <source id="ap-source" src="audio/Beautiful Things (Gabriel & Dresden Unplugged Mix).mp3" type="audio/mpeg">
+    <!-- Your browser does not support the audio element. -->
+        </audio>
+        <span id="ap-currenttrack"></span>
+  <!-- Buttons -->
+        <button id="ap-bwd"></button>
+        <button id="ap-play" class="play"></button>
+        <button id="ap-stop"></button>
+        <button id="ap-fwd"></button>
+        <div id="ap-vol"></div>
+        <span id="ap-time">
+    <span id="ap-time-current">0:00</span>/<span id="ap-time-max">0:00</span>
+  </span>
+  <div id="ap-bar">
+    <div id="ap-bar-full"></div>
+    <div id="ap-scroller"><img src="CSS/img/audioplayer/scroller.webp" id="ap-scrollerdrag"></div>
+  </div>
+  <div id="ap-current-title"><span id="ap-title-text">CerisePlayer # No songs detected.</span></div>
+  <script type="text/javascript" src="audioplayer.js"></script>
+</div>
+      </div>
+      <div class="content c1">
+        <div class="content-header"><h3>Welcome</h3></div>
+        <div class="scroll">
+        <p>Through the many veins of the internet you have made it to the domain of DOLLFANTASTIK. Plug in and enjoy your time here.</p>
+        <p>This website is intented to be a place for me to upload and journal anything that I have created or find interesting.</p>
+        <p>It has been built with a 1920x1080 monitor in mind.</p>
+      </div>
+      </div>
+        <div class="content c2">
+        <div class="content-header"><h3>What's On?</h3></div>
+        <div class ="scroll">
+        <div class="whats-on-image"><img src="CSS/img/TV-Recovered.png"></div>
+        <p>
+          The X-Files
+        </p>
+      </div>
+      </div>
+          <div class="content c3">
+        <div class="content-header"><h3>Current Obsessions</h3></div>
+        <ul>
+          <li>Cassettes</li>
+          <li>90s/00s Films</li>
+          <li>Ethiopian Food</li>
+          <li>90s Blow Outs</li>
+        </ul>
+      </div>
       </div>
     </div>
     </div>
   </body>
-</html>
+  
+     <script>
+        
+    (function () {
+
+        // The number of bars that should be displayed
+        const NBR_OF_BARS = 12;
+
+        // Get the audio element tag
+        const audio = document.querySelector("audio");
+
+        // Create an audio context
+        const ctx = new AudioContext();
+
+        // Create an audio source
+        const audioSource = ctx.createMediaElementSource(audio);
+
+        // Create an audio analyzer
+        const analyser = ctx.createAnalyser();
+
+        // Connect the source, to the analyzer, and then back the the context's destination
+        audioSource.connect(analyser);
+        analyser.connect(ctx.destination);
+
+        // Print the analyze frequencies
+        const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(frequencyData);
+        console.log("frequencyData", frequencyData);
+
+        // Get the visualizer container
+        const visualiserContainer = document.querySelector(".visualiser-container");
+
+        // Create a set of pre-defined bars
+        for( let i = 0; i < NBR_OF_BARS; i++ ) {
+
+            const bar = document.createElement("DIV");
+            bar.setAttribute("id", "bar" + i);
+            bar.setAttribute("class", "visualiser-container-bar");
+            visualiserContainer.appendChild(bar);
+
+        }
+
+        // This function has the task to adjust the bar heights according to the frequency data
+        function renderFrame() {
+
+            // Update our frequency data array with the latest frequency data
+            analyser.getByteFrequencyData(frequencyData);
+
+            for( let i = 0; i < NBR_OF_BARS; i++ ) {
+
+                // Since the frequency data array is 1024 in length, we don't want to fetch
+                // the first NBR_OF_BARS of values, but try and grab frequencies over the whole spectrum
+                const index = (i + 10) * 2;
+                // fd is a frequency value between 0 and 255
+                const fd = frequencyData[index];
+
+                // Fetch the bar DIV element
+                const bar = document.querySelector("#bar" + i);
+                if( !bar ) {
+                    continue;
+                }
+
+                // If fd is undefined, default to 0, then make sure fd is at least 4
+                // This will make make a quiet frequency at least 4px high for visual effects
+                const barHeight = Math.max(4, fd + 5 || 0);
+                bar.style.height = barHeight + "px";
+
+            }
+
+            // At the next animation frame, call ourselves
+            window.requestAnimationFrame(renderFrame);
+
+        }
+
+        renderFrame();
+
+
+    })();
+
+</script>
+  </html>
